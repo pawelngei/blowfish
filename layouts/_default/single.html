@@ -98,13 +98,13 @@
                 <img
                   class="my-0 rounded-md"
                   loading="lazy"
-                  data-zoom-src="{{ $featured.Resize "x1280" }}"
+                  data-zoom-src="{{ ($featured.Resize "x1280").RelPermalink }}"
                   srcset="
-                  {{ $featured.Resize "330x" }} 330w,
-                  {{ $featured.Resize "660x" }} 660w,
-                  {{ $featured.Resize "1024x" }} 1024w,
-                  {{ $featured.Resize "1320x" }} 2x"
-                  src="{{ $featured.Resize "660x" }}"
+                  {{ ($featured.Resize "330x").RelPermalink }} 330w,
+                  {{ ($featured.Resize "660x").RelPermalink }} 660w,
+                  {{ ($featured.Resize "1024x").RelPermalink }} 1024w,
+                  {{ ($featured.Resize "1320x").RelPermalink }} 2x"
+                  src="{{ ($featured.Resize "660x").RelPermalink }}"
                   alt="{{ $title }}"
                 />
                 <figcaption>
