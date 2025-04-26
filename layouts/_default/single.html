@@ -89,6 +89,33 @@
         {{ partial "series/series.html" . }}
 
         <div class="article-content max-w-prose mb-20">
+          {{ if eq .Type "art" }}
+            {{- $images := .Resources.ByType "image" -}}
+            {{- $featured := $images.GetMatch "*feature*" -}}
+            {{- $title := .Title -}}
+            {{- with $featured -}}
+              <figure>
+                <img
+                  class="my-0 rounded-md"
+                  loading="lazy"
+                  data-zoom-src="{{ $featured.Resize "x1280" }}"
+                  srcset="
+                  {{ $featured.Resize "330x" }} 330w,
+                  {{ $featured.Resize "660x" }} 660w,
+                  {{ $featured.Resize "1024x" }} 1024w,
+                  {{ $featured.Resize "1320x" }} 2x"
+                  src="{{ $featured.Resize "660x" }}"
+                  alt="{{ $title }}"
+                />
+                <figcaption>
+                  <a href="{{ $featured }}" target="_blank">
+                    [Download Full Resolution]
+                  </a>
+                </figcaption>
+              </figure>
+            {{- end -}}
+          {{ end }}
+
           {{ .Content }}
           {{ $defaultReplyByEmail := .Site.Params.replyByEmail }}
           {{ $replyByEmail := default $defaultReplyByEmail .Params.replyByEmail }}
