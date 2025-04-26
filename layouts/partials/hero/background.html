@@ -31,7 +31,7 @@
     ) }}
 {{- with $featured -}}
 
-{{ if $shouldAddHeaderSpace | default true}}
+{{ if and ($shouldAddHeaderSpace | default true) (not (eq $.Page.Type "art")) }}
 <div id="hero" class="h-[150px] md:h-[200px]"></div>
 {{ end }}
 
