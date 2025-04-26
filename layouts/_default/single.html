@@ -13,7 +13,7 @@
   {{ end }}
   {{ end }}
 
-  <header id="single_header" class="mt-5 max-w-prose">
+  <header id="single_header" class="mt-5 max-w-full mb-10">
     {{ if .Params.showBreadcrumbs | default (.Site.Params.article.showBreadcrumbs | default false) }}
     {{ partial "breadcrumbs.html" . }}
     {{ end }}
@@ -32,6 +32,40 @@
 
     {{ if not (strings.HasSuffix $baseURL "/") }}
     {{ $baseURL = delimit (slice $baseURL "/") "" }}
+    {{ end }}
+
+    {{ if eq .Type "art" }}
+      {{- $images := .Resources.ByType "image" -}}
+      {{- $featured := $images.GetMatch "*feature*" -}}
+      {{- $title := .Title -}}
+      {{- with $featured -}}
+        <section class="flex flex-col max-w-full mb-5">
+          <figure>
+            <img
+              class="mt-0 rounded-md w-full mb-5"
+              loading="lazy"
+              data-zoom-src="{{ ($featured.Resize "x1920").RelPermalink }}"
+              srcset="
+              {{ ($featured.Resize "330x").RelPermalink }} 330w,
+              {{ ($featured.Resize "660x").RelPermalink }} 660w,
+              {{ ($featured.Resize "1024x").RelPermalink }} 1024w,
+              {{ ($featured.Resize "1320x").RelPermalink }} 2x"
+              src="{{ ($featured.Resize "660x").RelPermalink }}"
+              alt="{{ $title }}"
+            />
+            <figcaption>
+              <a
+                class="!rounded-md bg-primary-600 px-4 py-2 !text-neutral !no-underline hover:!bg-primary-500 dark:bg-primary-800 dark:hover:!bg-primary-700"
+                href="{{ $featured }}"
+                target="_blank"
+                role="button"
+              >
+                Get Full Resolution
+              </a>
+            </figcaption>
+          </figure>
+        </section>
+      {{- end -}}
     {{ end }}
 
     {{ if not (.Params.showAuthorBottom | default ( .Site.Params.article.showAuthorBottom | default false)) }}
@@ -69,7 +103,7 @@
     {{ end }}
 
   </header>
-  
+
   <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row">
     
     {{ if or (and (.Params.showTableOfContents | default (.Site.Params.article.showTableOfContents | default false)) (in
@@ -89,33 +123,6 @@
         {{ partial "series/series.html" . }}
 
         <div class="article-content max-w-prose mb-20">
-          {{ if eq .Type "art" }}
-            {{- $images := .Resources.ByType "image" -}}
-            {{- $featured := $images.GetMatch "*feature*" -}}
-            {{- $title := .Title -}}
-            {{- with $featured -}}
-              <figure>
-                <img
-                  class="my-0 rounded-md"
-                  loading="lazy"
-                  data-zoom-src="{{ ($featured.Resize "x1920").RelPermalink }}"
-                  srcset="
-                  {{ ($featured.Resize "330x").RelPermalink }} 330w,
-                  {{ ($featured.Resize "660x").RelPermalink }} 660w,
-                  {{ ($featured.Resize "1024x").RelPermalink }} 1024w,
-                  {{ ($featured.Resize "1320x").RelPermalink }} 2x"
-                  src="{{ ($featured.Resize "660x").RelPermalink }}"
-                  alt="{{ $title }}"
-                />
-                <figcaption>
-                  <a href="{{ $featured }}" target="_blank">
-                    [Download Full Resolution]
-                  </a>
-                </figcaption>
-              </figure>
-            {{- end -}}
-          {{ end }}
-
           {{ .Content }}
           {{ $defaultReplyByEmail := .Site.Params.replyByEmail }}
           {{ $replyByEmail := default $defaultReplyByEmail .Params.replyByEmail }}
