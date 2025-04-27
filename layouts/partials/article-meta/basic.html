@@ -71,7 +71,13 @@
   {{ if (eq $taxonomy "authors")}}
   {{ if (gt (len ($context.GetTerms $taxonomy)) 0) }}
   {{ range $i, $a := $context.GetTerms $taxonomy }}
-    {{ if not (eq $i 0) }} ,&nbsp; {{ end }} <div style="cursor: pointer;" onclick="window.open({{ $a.RelPermalink }},'_self');return false;">{{ $a.LinkTitle }}</div>
+    {{ if not (eq $i 0) }} ,&nbsp; {{ end }}
+    <div
+      class="text-base text-primary-500 font-bold"
+      style="cursor: pointer;"
+      onclick="window.open({{ $a.RelPermalink }},'_self');return false;">
+      {{ $a.LinkTitle }}
+    </div>
   {{ end }}
   {{ end }}
   {{ end }}
