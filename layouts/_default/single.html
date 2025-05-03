@@ -138,11 +138,6 @@
         
         {{ if (.Params.showAuthorBottom | default ( .Site.Params.article.showAuthorBottom | default false)) }}
 
-          {{ if .Params.showAuthor | default (.Site.Params.article.showAuthor | default true) }}
-            {{ $showAuthor = 1 }}
-            {{ partial "author.html" . }}
-          {{ end }}
-
           {{ range $author := .Page.Params.authors }}
             {{ $authorData := index $authorsData $author }}
             {{- if $authorData -}}
