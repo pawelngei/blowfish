@@ -1,0 +1,16 @@
+name: Mirror To Codeberg
+on:
+  push:
+    branches: ["story-seed-library"]
+jobs:
+  Miror-To-Codeberg:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: yesolutions/mirror-action@master
+      with:
+        REMOTE: 'ssh://git@codeberg.org/alxd/blowfish-storyseedlibrary.git'
+        GIT_SSH_PRIVATE_KEY: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+        GIT_SSH_NO_VERIFY_HOST: "true"
