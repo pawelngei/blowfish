@@ -28,7 +28,7 @@ article:
   zen_mode_title:
     enable: "Włącz tryb zen"
     disable: "Wyłącz tryb zen"
-  download_full_resolution: "Pobierz wersję pełnej rozdzielczości"
+  download_full_resolution: "Pobierz w pełnej rozdzielczości"
 
 author:
   byline_title: "Autor"
