@@ -8,8 +8,8 @@ article:
   draft: "Szkic"
   edit_title: "Edytuj zawartość"
   reading_time:
-    one: "{{ .Count }} min"
-    other: "{{ .Count }} min"
+    one: "{{ .Count }} minuta"
+    other: "{{ .Count }} minut"
   reading_time_title: "Czas czytania"
   table_of_contents: "Spis treści"
   word_count:
@@ -21,10 +21,14 @@ article:
   likes:
     one: "{{ .Count }} polubienie"
     other: "{{ .Count }} polubień"
-  part_of_series: "This article is part of a series."
-  part: "Part"
-  this_article: "This Article"
-  related_articles: "Related"
+  part_of_series: "Ten artykuł jest częścią serii."
+  part: "Część"
+  this_article: "Ten artykuł"
+  related_articles: "Pokrewne"
+  zen_mode_title:
+    enable: "Włącz tryb zen"
+    disable: "Wyłącz tryb zen"
+  download_full_resolution: "Pobierz wersję pełnej rozdzielczości"
 
 author:
   byline_title: "Autor"
@@ -41,7 +45,7 @@ error:
 footer:
   dark_appearance: "Zmień na tryb ciemny"
   light_appearance: "Zmień na tryb jasny"
-  powered_by: "Powered by {{ .Hugo }} &amp; {{ .Theme }}"
+  powered_by: "Stworzone z użyciem {{ .Hugo }} &amp; {{ .Theme }}"
 
 list:
   externalurl_title: "Link do zewnętrznej strony"
