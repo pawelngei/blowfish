@@ -1,0 +1,77 @@
+global:
+  language: "UA"
+
+article:
+  anchor_label: "Якір"
+  date: "{{ .Date }}"
+  date_updated: "Обновлено: {{ .Date }}"
+  draft: "Чернетка"
+  edit_title: "Редагувати вміст"
+  reading_time:
+    one: "{{ .Count }} хвилина"
+    other: "{{ .Count }} хвилин"
+  reading_time_title: "Час читання"
+  table_of_contents: "Зміст"
+  word_count:
+    one: "{{ .Count }} слово"
+    other: "{{ .Count }} слів"
+  views:
+    one: "{{ .Count }} перегляд"
+    other: "{{ .Count }} переглядів"
+  likes:
+    one: "{{ .Count }} вподобайка"
+    other: "{{ .Count }} вподобайок"
+  part_of_series: "Ця стаття є частиною серії."
+  part: "Частина"
+  this_article: "Ця стаття"
+  related_articles: "Схожі статті"
+  zen_mode_title:
+    enable: "Вмикнути zen mode"
+    disable: "Вимкнути zen mode"
+
+author:
+  byline_title: "Автор"
+
+code:
+  copy: "Копіювати"
+  copied: "Скопійовано"
+
+error:
+  404_title: "Сторінку не знайдено :confused:"
+  404_error: "Помилка 404"
+  404_description: "Запитувана сторінка не існує."
+
+footer:
+  dark_appearance: "Перейти в темний режим"
+  light_appearance: "Перейти в світлий режим"
+  powered_by: "Працює на {{ .Hugo }} &amp; {{ .Theme }}"
+
+list:
+  externalurl_title: "Посилання на зовнішній сайт"
+  no_articles: "Тут ще немає статей."
+
+nav:
+  scroll_to_top_title: "Пролистати нагору"
+  skip_to_main: "Перейти до основного змісту"
+
+search:
+  open_button_title: "Пошук (/)"
+  close_button_title: "Закрити (Esc)"
+  input_placeholder: "Пошук"
+
+sharing:
+  email: "Надіслати електронною поштою"
+  facebook: "Поділитися на Facebook"
+  linkedin: "Поділитися на LinkedIn"
+  pinterest: "Додати у Pinterest"
+  reddit: "Поділитися на Reddit"
+  twitter: "Твітнути на Twitter"
+  bluesky: "Поділитися на Bluesky"
+  whatsapp: "Відправити у WhatsApp"
+  telegram: "Відправити у Telegram"
+
+shortcode:
+  recent_articles: "Останні публікації"
+
+recent:
+  show_more: "Показати більше"
