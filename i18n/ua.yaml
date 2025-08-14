@@ -28,6 +28,7 @@ article:
   zen_mode_title:
     enable: "Вмикнути zen mode"
     disable: "Вимкнути zen mode"
+  download_full_resolution: "Завантажити у високій якості"
 
 author:
   byline_title: "Автор"
