@@ -28,6 +28,7 @@ article:
   zen_mode_title:
     enable: "Activar modo zen"
     disable: "Desactivar modo zen"
+  download_full_resolution: "Descargar a resolución completa"
 
 author:
   byline_title: "Autor"
