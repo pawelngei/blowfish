@@ -1,0 +1,78 @@
+global:
+  language: "HI"
+
+article:
+  anchor_label: "लंगर"
+  date: "{{ .Date }}"
+  date_updated: "अद्यतन: {{ .Date }}"
+  draft: "मसौदा"
+  edit_title: "सामग्री संपादित करें"
+  reading_time:
+    one: "{{ .Count }} मिनट"
+    other: "{{ .Count }} मिनट"
+  reading_time_title: "पढ़ने का समय"
+  table_of_contents: "विषयसूची"
+  word_count:
+    one: "{{ .Count }} शब्द"
+    other: "{{ .Count }} शब्द"
+  views:
+    one: "{{ .Count }} देखना"
+    other: "{{ .Count }} दृश्य"
+  likes:
+    one: "{{ .Count }} पसंद"
+    other: "{{ .Count }} पसंद"
+  part_of_series: "यह लेख एक श्रृंखला का हिस्सा है."
+  part: "भाग"
+  this_article: "यह लेख"
+  related_articles: "संबंधित"
+  zen_mode_title:
+    enable: "ज़ेन मोड सक्षम करें"
+    disable: "ज़ेन मोड अक्षम करें"
+  download_full_resolution: "पूर्ण रिज़ॉल्यूशन देखें"
+
+author:
+  byline_title: "लेखक"
+
+code:
+  copy: "प्रतिलिपि"
+  copied: "कॉपी किया गया"
+
+error:
+  404_title: "पृष्ठ नहीं मिला :confused:"
+  404_error: "गलती 404"
+  404_description: "ऐसा लगता है कि आपके द्वारा अनुरोधित पृष्ठ मौजूद नहीं है."
+
+footer:
+  dark_appearance: "गहरे रंग में बदलें"
+  light_appearance: "हल्के स्वरूप पर स्विच करें"
+  powered_by: "द्वारा संचालित {{ .Hugo }} &amp; {{ .Theme }}"
+
+list:
+  externalurl_title: "बाहरी साइट से लिंक करें"
+  no_articles: "यहाँ अभी तक सूचीबद्ध करने के लिए कोई लेख नहीं है."
+
+nav:
+  scroll_to_top_title: "ऊपर स्क्रॉल करें"
+  skip_to_main: "मुख्य सामग्री पर जाएं"
+
+search:
+  open_button_title: "खोज (/)"
+  close_button_title: "बंद करना (Esc)"
+  input_placeholder: "खोज"
+
+sharing:
+  email: "ईमेल के माध्यम से भेजें"
+  facebook: "पर साझा करें Facebook"
+  linkedin: "पर साझा करें LinkedIn"
+  pinterest: "पर साझा करें Pinterest"
+  reddit: "पर साझा करें Reddit"
+  twitter: "पर साझा करें Twitter"
+  bluesky: "पर साझा करें Bluesky"
+  whatsapp: "पर साझा करें WhatsApp"
+  telegram: "पर साझा करें Telegram"
+
+shortcode:
+  recent_articles: "हाल ही का"
+
+recent:
+  show_more: "और दिखाएँ"
