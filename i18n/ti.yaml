@@ -1,0 +1,78 @@
+global:
+  language: "ኢን"
+
+ዓንቀጽ:
+  anchor_label: "መልህቕ"
+  date: "{{ .Date }}"
+  date_updated: "ኣፕዴትድ: {{ .Date }}" 
+  draft: "ረቂቕ"
+  edit_title: "ትሕዝቶ ኣርም"
+  reading_time: 
+    ሓደ: "{{ .Count }} ደቒቕ"
+    ካልእ: "{{ .Count }} ደቒቕ"
+  reading_time_title: "ግዜ ንባብ" 
+  table_of_contents: "ሰንጠረዥ ትሕዝቶ" 
+  word_count:
+    one: "{{ .Count }} ቃል"
+    other: "{{ .Count }} ቃላት"
+  views:
+    one: "{{ .Count }} ርእይቶ"
+    other: "{{ .Count }} ርእይቶታት"
+  likes: 
+    one: "{{ .Count }} ላይክ"
+    other: "{{ .Count }} ላይክስ"
+  part_of_series: "እዚ ጽሑፍ ኣካል ናይ ሓደ ተኸታታሊ ጽሑፍ እዩ።" 
+  part: "ክፋል"
+  this_article: "እዚ ዓንቀጽ" 
+  related_articles: "ተዛመድቲ" 
+  zen_mode_title: 
+    enable: "ዘን ሞድ ክፈት"
+    disable: "ዘን ሞድ ዕጾ"
+  download_full_resolution: "ምሉእ ሪሶሉሽን ርኸብ"
+
+author:
+  byline_title: "ደራሲ"
+
+code: 
+  copy: "ቅዳሕ"
+  copied: "ተቐዲሑ"
+
+error:
+  404_title: "ገጽ ኣይተረኽበን :confused:" 
+  404_error: "ጌጋ 404"
+  404_description: "እቲ ዝሓተትካዮ ገጽ የለን ይመስል።"
+
+footer: 
+  dark_appearance: "ናብ ጸሊም ድሕረባይታ ቀይር" 
+  light_appearance: "ናብ ብርሃን ድሕረባይታ ቀይር" 
+  powered_by: "ብ {{ .Hugo }} &amp; {{ .Theme }} ዝድገፍ"
+
+list:
+  externalurl_title: "መተሓሓዚ ናብ ግዳማዊ መርበብ ሓበሬታ" 
+  no_articles: "ክሳብ ሕጂ ኣብዚ ዝዝርዝር ጽሑፋት የለን"
+
+nav: 
+  scroll_to_top_title: "ናብ ላዕሊ ስክሮል ግበር" 
+  skip_to_main: "ናብ ቀንዲ ትሕዝቶ ዝለል"
+
+search:
+  open_button_title: "ድለ (/)"
+  close_button_title: "ዕጾ (Esc)"
+  input_placeholder: "ድለ"
+
+sharing: 
+  email: "ብኢመይል ስደድ"
+  facebook: "ኣብ ፌስቡክ ሼር ግበሩ" 
+  linkedin: "ኣብ ሊንክድኢን ሼር ግበሩ" 
+  pinterest: "ኣብ ፒንተርስት ፒን ግበሩ" 
+  reddit: "ናብ Reddit ኣቕርብ"
+  twitter: "ኣብ ትዊተር ትዊት ግበሩ" 
+  bluesky: "ኣብ ብሉስካይ ፖስት ግበሩ" 
+  whatsapp: "ብ ዋትስኣፕ ሼር ግበር" 
+  telegram: "ብቴሌግራም ሼር ግበር"
+
+shortcode: 
+  recent_articles: "ናይ ቀረባ እዋን"
+
+recent:
+  show_more: "ተወሳኺ ኣርእይ"
