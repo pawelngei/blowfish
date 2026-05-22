@@ -29,6 +29,7 @@ article:
     enable: "Enable zen mode"
     disable: "Disable zen mode"
   download_full_resolution: "Get Full Resolution"
+  download_coloring_page: "Download Coloring Page"
 
 author:
   byline_title: "Author"

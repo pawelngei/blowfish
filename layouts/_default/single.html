@@ -53,7 +53,7 @@
               src="{{ ($featured.Resize "660x").RelPermalink }}"
               alt="{{ $title }}"
             />
-            <figcaption>
+            <figcaption class="flex flex-row justify-between max-w-full mb-5">
               <a
                 class="!rounded-md bg-primary-600 px-4 py-2 !text-neutral !no-underline hover:!bg-primary-500 dark:bg-primary-800 dark:hover:!bg-primary-700"
                 href="{{ $featured.Permalink }}"
@@ -62,6 +62,19 @@
               >
                 {{ i18n "article.download_full_resolution"}}
               </a>
+              {{- $coloringImages := $.Resources.Match "coloring/*" -}}
+              {{- with $coloringImages -}}
+                  {{- range . -}}
+                    <a
+                      class="!rounded-md bg-primary-600 px-4 py-2 !text-neutral !no-underline hover:!bg-primary-500 dark:bg-primary-800 dark:hover:!bg-primary-700"
+                      href="{{ .Permalink }}"
+                      target="_blank"
+                      role="button"
+                    >
+                      {{ i18n "article.download_coloring_page" }}
+                    </a>
+                  {{- end -}}
+              {{- end -}}
             </figcaption>
           </figure>
         </section>
