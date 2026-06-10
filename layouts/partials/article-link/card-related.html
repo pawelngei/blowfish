@@ -21,11 +21,11 @@
       {{- with $featured -}}
       {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
-        <div class="w-full thumbnail_card_related nozoom" style="background-image:url({{ .RelPermalink }});"></div>
+        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="150">
         {{ end }}
       {{ else }}
         {{ with .Resize "600x" }}
-        <div class="w-full thumbnail_card_related nozoom" style="background-image:url({{ .RelPermalink }});"></div>
+        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="150">
         {{ end }}
       {{ end }}
       {{- else -}}

@@ -49,11 +49,11 @@
     {{- with $featured -}}
     {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
-        <div class="{{ $articleImageClasses }}" style="background-image:url({{ .RelPermalink }});"></div>
+        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="180">
         {{ end }}
       {{ else }}
         {{ with .Resize "600x"  }}
-        <div class="{{ $articleImageClasses }}" style="background-image:url({{ .RelPermalink }});"></div>
+        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="180">
         {{ end }}
       {{ end }}
     {{- else -}}

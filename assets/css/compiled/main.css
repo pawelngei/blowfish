@@ -15,6 +15,9 @@ body.zen-mode-enable {
 @layer theme, base, components, utilities;
 @layer theme {
   :root, :host {
+    --thumbnail-height: 180px;
+    --thumbnail-card-height: 200px;
+    --thumbnail-card-related-height: 150px;
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
@@ -3637,28 +3640,24 @@ pre {
 }
 .thumbnail {
   min-width: 300px;
-  height: 180px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  height: var(--thumbnail-height);
+  object-fit: cover;
+  object-position: center;
 }
 .thumbnail_card {
-  height: 200px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  height: var(--thumbnail-card-height);
+  object-fit: cover;
+  object-position: center;
 }
 .thumbnail_card_related {
-  height: 150px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  height: var(--thumbnail-card-related-height);
+  object-fit: cover;
+  object-position: center;
 }
 .thumbnail_card_term {
-  height: 150px;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
+  height: var(--thumbnail-card-related-height);
+  object-fit: cover;
+  object-position: center;
 }
 .single_hero_basic {
   background-repeat: no-repeat;

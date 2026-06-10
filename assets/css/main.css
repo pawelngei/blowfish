@@ -5,6 +5,12 @@
 @import "tailwindcss";
 @config "../../tailwind.config.js";
 
+:root {
+  --thumbnail-height: 180px;
+  --thumbnail-card-height: 200px;
+  --thumbnail-card-related-height: 150px;
+}
+
 body a,
 body button {
   @apply transition-colors;
@@ -360,31 +366,27 @@ pre {
 
 .thumbnail {
   min-width: 300px;
-  height: 180px;
-  background-repeat:no-repeat;
-  background-size:cover; 
-  background-position:center;
+  height: var(--thumbnail-height);
+  object-fit: cover;
+  object-position: center;
 }
 
 .thumbnail_card {
-  height: 200px;
-  background-repeat:no-repeat;
-  background-size:cover; 
-  background-position:center;
+  height: var(--thumbnail-card-height);
+  object-fit: cover;
+  object-position: center;
 }
 
 .thumbnail_card_related {
-  height: 150px;
-  background-repeat:no-repeat;
-  background-size:cover; 
-  background-position:center;
+  height: var(--thumbnail-card-related-height);
+  object-fit: cover;
+  object-position: center;
 }
 
 .thumbnail_card_term {
-  height: 150px;
-  background-repeat:no-repeat;
-  background-size:cover; 
-  background-position:center;
+  height: var(--thumbnail-card-related-height);
+  object-fit: cover;
+  object-position: center;
 }
 
 .single_hero_basic {
