@@ -9,6 +9,7 @@
       src="{{ $authorImage.RelPermalink }}" />
   {{ end }}
   <div class="place-self-center">
+    {{ if not .hideName }}
     {{ $link := .link}}
     {{ with .data.name | markdownify | emojify }}
     <div class="text-[0.6rem] uppercase leading-3 text-neutral-500 dark:text-neutral-400">
@@ -17,6 +18,7 @@
     <a {{ if $link }} href="{{ $link }}" {{ end }} class="font-semibold leading-6 text-neutral-800 dark:text-neutral-300">
       {{ . }}
     </a>
+    {{ end }}
     {{ end }}
     {{ with .data.bio | markdownify }}
     <div class="text-sm text-neutral-700 dark:text-neutral-400">{{ . }}</div>

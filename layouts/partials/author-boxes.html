@@ -1,34 +1,14 @@
 {{/* Renders one bio box per author listed in the page's `authors` param.
-     Data source: content/authors/<name>/ front matter + featured.jpg.
-     Current-language page overrides; default language is authoritative. */}}
+     Data source: content/authors/<name>/ front matter + portrait.jpg,
+     resolved via author-resolve.html. */}}
 {{ $page := .context }}
 {{ range $author := $page.Params.authors }}
-  {{ $path := printf "/authors/%s" $author }}
-  {{ $defaultPage := $page.Sites.Default.GetPage $path }}
-  {{ $langPage := $page.Site.GetPage $path }}
-
-  {{ $authorPage := $defaultPage }}
-  {{ with $langPage }}{{ if .File }}{{ $authorPage = . }}{{ end }}{{ end }}
-
-  {{- if $authorPage -}}
-    {{ $bio := $authorPage.Params.bio }}
-    {{ $social := $authorPage.Params.social }}
-    {{ if $defaultPage }}
-      {{ $bio = $bio | default $defaultPage.Params.bio }}
-      {{ $social = $social | default $defaultPage.Params.social }}
-    {{ end }}
-    {{/* Bundle resources are shared across translations. portrait.jpg is the
-         dedicated bio-box avatar, distinct from featured.jpg (the page's
-         general cover image, used by hero/cards/RSS elsewhere in the theme). */}}
-    {{ $image := $authorPage.Resources.GetMatch "*portrait*" }}
-    {{/* Link to the term page in the current language when it exists
-         (even auto-generated — it lists this language's works) */}}
-    {{ $link := ($langPage | default $authorPage).RelPermalink }}
-
+  {{ $resolved := partial "author-resolve.html" (dict "page" $page "slug" $author) }}
+  {{ with $resolved }}
     {{ partial "author-extra.html" (dict
         "context" $page
-        "data" (dict "name" $authorPage.Title "bio" $bio "social" $social)
-        "link" $link
-        "image" $image) }}
-  {{- end -}}
+        "data" (dict "name" .authorPage.Title "bio" .bio "social" .social)
+        "link" .link
+        "image" .image) }}
+  {{ end }}
 {{ end }}

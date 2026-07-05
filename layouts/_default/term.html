@@ -19,13 +19,23 @@
   <div class="mt-1 mb-2 text-base text-neutral-500 dark:text-neutral-400 print:hidden">
     {{ partial "article-meta/term.html" (dict "context" . "scope" "single") }}
   </div>
+  {{ $termPage := . }}
+  {{ $resolved := partial "author-resolve.html" (dict "page" $termPage "slug" .Data.Term) }}
+  {{ with $resolved }}
+    {{ partial "author-extra.html" (dict
+        "context" $termPage
+        "data" (dict "bio" .bio "social" .social)
+        "image" .image
+        "hideName" true) }}
+  {{ end }}
   </header>
 
   <section class="flex flex-col max-w-full mt-0 mb-5 prose dark:prose-invert lg:flex-row">
-    {{ if .Content }}
+    {{ with .Content }}
     <div class="min-w-0 min-h-0 max-w-prose">
-      {{ .Content }}
+      {{ . }}
     </div>
+    {{ end }}
     <script>
       var oid = "views_term_{{ .Data.Term }}"
       var oid_likes = "likes_term_{{ .Data.Term }}"
@@ -33,7 +43,6 @@
     {{ $jsPage := resources.Get "js/page.js" }}
     {{ $jsPage = $jsPage | resources.Minify | resources.Fingerprint "sha512" }}
     <script type="text/javascript" src="{{ $jsPage.RelPermalink }}" integrity="{{ $jsPage.Data.Integrity }}"></script>
-    {{ end }}
   </section>
 
 

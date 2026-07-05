@@ -1,0 +1,33 @@
+{{/* Resolves a single author's display data for a given page.
+     Current-language page overrides; default language is authoritative
+     for any param the current-language page doesn't set.
+     Input: dict "page" $page "slug" $authorSlug
+     Returns: dict "authorPage" "bio" "social" "image" "link", or an
+     empty dict (falsy) if no author page exists. */}}
+{{ $page := .page }}
+{{ $author := .slug }}
+{{ $path := printf "/authors/%s" $author }}
+{{ $defaultPage := $page.Sites.Default.GetPage $path }}
+{{ $langPage := $page.Site.GetPage $path }}
+
+{{ $authorPage := $defaultPage }}
+{{ with $langPage }}{{ if .File }}{{ $authorPage = . }}{{ end }}{{ end }}
+
+{{ $result := dict }}
+{{ if $authorPage }}
+  {{ $bio := $authorPage.Params.bio }}
+  {{ $social := $authorPage.Params.social }}
+  {{ if $defaultPage }}
+    {{ $bio = $bio | default $defaultPage.Params.bio }}
+    {{ $social = $social | default $defaultPage.Params.social }}
+  {{ end }}
+  {{/* Bundle resources are shared across translations. portrait.jpg is the
+       dedicated bio-box avatar, distinct from featured.jpg (the page's
+       general cover image, used by hero/cards/RSS elsewhere in the theme). */}}
+  {{ $image := $authorPage.Resources.GetMatch "*portrait*" }}
+  {{/* Link to the term page in the current language when it exists
+       (even auto-generated — it lists this language's works) */}}
+  {{ $link := ($langPage | default $authorPage).RelPermalink }}
+  {{ $result = dict "authorPage" $authorPage "bio" $bio "social" $social "image" $image "link" $link }}
+{{ end }}
+{{ return $result }}
