@@ -1,0 +1,32 @@
+{{/* Renders one bio box per author listed in the page's `authors` param.
+     Data source: content/authors/<name>/ front matter + featured.jpg.
+     Current-language page overrides; default language is authoritative. */}}
+{{ $page := .context }}
+{{ range $author := $page.Params.authors }}
+  {{ $path := printf "/authors/%s" $author }}
+  {{ $defaultPage := $page.Sites.Default.GetPage $path }}
+  {{ $langPage := $page.Site.GetPage $path }}
+
+  {{ $authorPage := $defaultPage }}
+  {{ with $langPage }}{{ if .File }}{{ $authorPage = . }}{{ end }}{{ end }}
+
+  {{- if $authorPage -}}
+    {{ $bio := $authorPage.Params.bio }}
+    {{ $social := $authorPage.Params.social }}
+    {{ if $defaultPage }}
+      {{ $bio = $bio | default $defaultPage.Params.bio }}
+      {{ $social = $social | default $defaultPage.Params.social }}
+    {{ end }}
+    {{/* Bundle resources are shared across translations */}}
+    {{ $image := $authorPage.Resources.GetMatch "*feature*" }}
+    {{/* Link to the term page in the current language when it exists
+         (even auto-generated — it lists this language's works) */}}
+    {{ $link := ($langPage | default $authorPage).RelPermalink }}
+
+    {{ partial "author-extra.html" (dict
+        "context" $page
+        "data" (dict "name" $authorPage.Title "bio" $bio "social" $social)
+        "link" $link
+        "image" $image) }}
+  {{- end -}}
+{{ end }}
