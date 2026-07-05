@@ -20,8 +20,9 @@
     </a>
     {{ end }}
     {{ end }}
+    {{ $bioTextClass := .bioTextClass | default "text-sm" }}
     {{ with .data.bio | markdownify }}
-    <div class="text-sm text-neutral-700 dark:text-neutral-400">{{ . }}</div>
+    <div class="{{ $bioTextClass }} text-neutral-700 dark:text-neutral-400">{{ . }}</div>
     {{ end }}
     <div class="text-2xl sm:text-lg">
       <div class="flex flex-wrap text-neutral-400 dark:text-neutral-500">
