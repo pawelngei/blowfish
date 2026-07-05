@@ -17,8 +17,10 @@
       {{ $bio = $bio | default $defaultPage.Params.bio }}
       {{ $social = $social | default $defaultPage.Params.social }}
     {{ end }}
-    {{/* Bundle resources are shared across translations */}}
-    {{ $image := $authorPage.Resources.GetMatch "*feature*" }}
+    {{/* Bundle resources are shared across translations. portrait.jpg is the
+         dedicated bio-box avatar, distinct from featured.jpg (the page's
+         general cover image, used by hero/cards/RSS elsewhere in the theme). */}}
+    {{ $image := $authorPage.Resources.GetMatch "*portrait*" }}
     {{/* Link to the term page in the current language when it exists
          (even auto-generated — it lists this language's works) */}}
     {{ $link := ($langPage | default $authorPage).RelPermalink }}
