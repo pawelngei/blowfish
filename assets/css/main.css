@@ -375,18 +375,27 @@ pre {
   height: var(--thumbnail-card-height);
   object-fit: cover;
   object-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .thumbnail_card_related {
   height: var(--thumbnail-card-related-height);
   object-fit: cover;
   object-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .thumbnail_card_term {
   height: var(--thumbnail-card-related-height);
   object-fit: cover;
   object-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .single_hero_basic {
