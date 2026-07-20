@@ -36,7 +36,7 @@
     {{- with $.Params.images -}}
     {{- range first 6 . }}
     <meta property="og:image" content="{{ . | absURL }}" />{{ end -}}
-    {{- else -}}
+    {{- end -}}
     {{- $images := $.Resources.ByType "image" -}}
     {{- $featured := $images.GetMatch "*feature*" -}}
     {{- if not $featured }}{{ $featured = $images.GetMatch "{*cover*,*thumbnail*}" }}{{ end -}}
@@ -44,9 +44,18 @@
     {{- $url:= .Params.featureimage -}}
     {{ $featured = resources.GetRemote $url }}
     {{ end }}
-    {{- if not $featured }}{{ with .Site.Params.defaultFeaturedImage }}{{ $featured = resources.Get . }}{{ end }}{{ end -}}
-    {{ if .Params.hideFeatureImage }}{{ $featured = false }}{{ end }}
-    {{- with $featured -}}
+    {{/* Params.images can point outside the page bundle (e.g. "../../art/author/piece/featured.jpg"),
+         which Resources.GetMatch cannot resolve, so fall back to a plain URL without image processing. */}}
+    {{ $featuredParamURL := "" }}
+    {{- if not $featured -}}
+      {{- with $.Params.images -}}
+        {{- $featuredParamURL = index . 0 | relURL -}}
+      {{- end -}}
+    {{- end -}}
+    {{ if .Params.hideFeatureImage }}{{ $featured = false }}{{ $featuredParamURL = "" }}{{ end }}
+    {{- if and (not $featured) (not $featuredParamURL) }}{{ with .Site.Params.defaultFeaturedImage }}{{ $featured = resources.Get . }}{{ end }}{{ end -}}
+    {{- if $featured -}}
+    {{ with $featured }}
     {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
         <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="180">
@@ -56,10 +65,12 @@
         <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="180">
         {{ end }}
       {{ end }}
+    {{ end }}
+    {{- else if $featuredParamURL -}}
+    <img src="{{ $featuredParamURL }}" class="{{ $articleImageClasses }}" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="180">
     {{- else -}}
     {{- with $.Site.Params.images }}
     <meta property="og:image" content="{{ index . 0 | absURL }}" />{{ end -}}
-    {{- end -}}
     {{- end -}}
 
 

@@ -10,7 +10,16 @@
 {{ $featured = resources.GetRemote $url }}
 {{ end }}
 
-{{- if not $featured }}
+{{/* Params.images can point outside the page bundle (e.g. "../../art/author/piece/featured.jpg"),
+     which Resources.GetMatch cannot resolve, so fall back to a plain URL without image processing. */}}
+{{ $featuredParamURL := "" }}
+{{- if not $featured -}}
+  {{- with .Params.images -}}
+    {{- $featuredParamURL = index . 0 | relURL -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if and (not $featured) (not $featuredParamURL) }}
  {{ with .Site.Params.defaultBackgroundImage }}
   {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
    {{ $featured = resources.GetRemote . }}
@@ -21,31 +30,34 @@
 {{ end -}}
 
 {{ $isParentList := eq (.Scratch.Get "scope") "list"  }}
-{{ $shouldBlur := $.Params.layoutBackgroundBlur | default (or 
-        (and ($.Site.Params.article.layoutBackgroundBlur | default true) (not $isParentList)) 
+{{ $shouldBlur := $.Params.layoutBackgroundBlur | default (or
+        (and ($.Site.Params.article.layoutBackgroundBlur | default true) (not $isParentList))
         (and ($.Site.Params.list.layoutBackgroundBlur | default true) ($isParentList))
     ) }}
-{{ $shouldAddHeaderSpace := $.Params.layoutBackgroundHeaderSpace | default (or 
-        (and ($.Site.Params.article.layoutBackgroundHeaderSpace | default true) (not $isParentList)) 
+{{ $shouldAddHeaderSpace := $.Params.layoutBackgroundHeaderSpace | default (or
+        (and ($.Site.Params.article.layoutBackgroundHeaderSpace | default true) (not $isParentList))
         (and ($.Site.Params.list.layoutBackgroundHeaderSpace | default true) ($isParentList))
     ) }}
-{{- with $featured -}}
+
+{{ $bgURL := "" }}
+{{- if $featured -}}
+  {{- if or $disableImageOptimization (strings.HasSuffix $featured ".svg") -}}
+    {{ $bgURL = $featured.RelPermalink }}
+  {{- else -}}
+    {{ with $featured.Resize (print ($.Site.Params.backgroundImageWidth | default "1200") "x") }}{{ $bgURL = .RelPermalink }}{{ end }}
+  {{- end -}}
+{{- else if $featuredParamURL -}}
+  {{ $bgURL = $featuredParamURL }}
+{{- end -}}
+
+{{- with $bgURL -}}
 
 {{ if and ($shouldAddHeaderSpace | default true) (not (eq $.Page.Type "art")) }}
 <div id="hero" class="h-[150px] md:h-[200px]"></div>
 {{ end }}
 
-{{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
-    {{ with . }}
-    <div class="fixed inset-x-0 top-0 h-[800px] single_hero_background nozoom"
-    style="background-image:url({{ .RelPermalink }});">
-    {{ end }}
-{{ else }}
-    {{ with .Resize (print ($.Site.Params.backgroundImageWidth | default "1200") "x") }}
-    <div class="fixed inset-x-0 top-0 h-[800px] single_hero_background nozoom"
-    style="background-image:url({{ .RelPermalink }});">
-    {{ end }}
-{{ end }}
+<div class="fixed inset-x-0 top-0 h-[800px] single_hero_background nozoom"
+style="background-image:url({{ . }});">
 
     <div class="absolute inset-0 bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal">
     </div>
