@@ -18,7 +18,11 @@
       {{ $featured = resources.GetRemote $url }}
       {{ end }}
       {{/* Params.images can point outside the page bundle (e.g. "../../art/author/piece/featured.jpg"),
-           which Resources.GetMatch cannot resolve, so fall back to a plain URL without image processing. */}}
+           which Resources.GetMatch cannot resolve on this page directly - resolve the target
+           page's own Resource instead, so it can still be resized. */}}
+      {{- if not $featured -}}
+        {{ $featured = partial "utils/resolve-cross-bundle-image.html" (dict "page" $ "pattern" "*feature*") }}
+      {{- end -}}
       {{ $featuredParamURL := "" }}
       {{- if not $featured -}}
         {{- with $.Params.images -}}

@@ -9,7 +9,7 @@
       {{- with $.Params.images -}}
       {{- range first 6 . }}
       <meta property="og:image" content="{{ . | absURL }}" />{{ end -}}
-      {{- else -}}
+      {{- end -}}
       {{- $images := $.Resources.ByType "image" -}}
       {{- $featured := $images.GetMatch "*feature*" -}}
       {{- if not $featured }}{{ $featured = $images.GetMatch "{*cover*,*thumbnail*}" }}{{ end -}}
@@ -17,8 +17,21 @@
       {{- $url:= .Params.featureimage -}}
       {{ $featured = resources.GetRemote $url }}
       {{ end }}
-      {{- if not $featured }}{{ with .Site.Params.defaultFeaturedImage }}{{ $featured = resources.Get . }}{{ end }}{{ end -}}
-      {{- with $featured -}}
+      {{/* Params.images can point outside the page bundle (e.g. "../../art/author/piece/featured.jpg"),
+           which Resources.GetMatch cannot resolve on this page directly - resolve the target
+           page's own Resource instead, so it can still be resized. */}}
+      {{- if not $featured -}}
+        {{ $featured = partial "utils/resolve-cross-bundle-image.html" (dict "page" $ "pattern" "*feature*") }}
+      {{- end -}}
+      {{ $featuredParamURL := "" }}
+      {{- if not $featured -}}
+        {{- with $.Params.images -}}
+          {{- $featuredParamURL = index . 0 | relURL -}}
+        {{- end -}}
+      {{- end -}}
+      {{- if and (not $featured) (not $featuredParamURL) }}{{ with .Site.Params.defaultFeaturedImage }}{{ $featured = resources.Get . }}{{ end }}{{ end -}}
+      {{- if $featured -}}
+      {{ with $featured }}
       {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
         <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="150">
@@ -28,10 +41,12 @@
         <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="150">
         {{ end }}
       {{ end }}
+      {{ end }}
+      {{- else if $featuredParamURL -}}
+      <img src="{{ $featuredParamURL }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="150">
       {{- else -}}
       {{- with $.Site.Params.images }}
       <meta property="og:image" content="{{ index . 0 | absURL }}" />{{ end -}}
-      {{- end -}}
       {{- end -}}
 
 

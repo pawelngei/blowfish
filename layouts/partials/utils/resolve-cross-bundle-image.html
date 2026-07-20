@@ -1,0 +1,20 @@
+{{/* Resolves .page.Params.images's first entry to the actual image Resource on the
+     TARGET page's bundle when it points outside .page's own bundle (e.g.
+     "../../art/{author}/{piece}/featured.jpg"), so callers can .Resize it like any
+     local resource instead of falling back to a raw, unprocessed URL.
+     Takes (dict "page" $page "pattern" $globPattern); returns a Resource or "". */}}
+{{ $resource := "" }}
+{{ $page := .page }}
+{{ $pattern := .pattern | default "*feature*" }}
+{{ with $page.Params.images }}
+  {{ $imagePath := index . 0 }}
+  {{ if not (or (strings.HasPrefix $imagePath "http://") (strings.HasPrefix $imagePath "https://")) }}
+    {{ with $page.File }}
+      {{ $targetDir := path.Dir (path.Join .Dir $imagePath) }}
+      {{ with site.GetPage $targetDir }}
+        {{ $resource = .Resources.GetMatch $pattern }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ return $resource }}
