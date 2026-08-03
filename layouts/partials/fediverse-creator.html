@@ -1,0 +1,31 @@
+{{/* Emits <meta name="fediverse:creator"> for each author of this page who
+     lists a mastodon or pixelfed profile in params.social. Social links live
+     only in content/authors/<slug>/_index.en.md, so author-resolve.html's
+     per-param fallback makes this work identically in every language. */}}
+{{ $page := . }}
+{{ $slugs := $page.Params.authors | default slice }}
+{{/* the author's own taxonomy term page: /authors/<slug>/ */}}
+{{ if and (eq $page.Kind "term") (eq $page.Data.Plural "authors") }}
+{{ $slugs = slice $page.Data.Term }}
+{{ end }}
+
+{{ $handles := slice }}
+{{ range $slugs }}
+{{ with partial "author-resolve.html" (dict "page" $page "slug" .) }}
+{{ range .social }}
+{{ range $name, $url := . }}
+{{ if in (slice "mastodon" "pixelfed") $name }}
+{{ $u := urls.Parse $url }}
+{{ $user := $u.Path | strings.TrimPrefix "/" | strings.TrimSuffix "/" | strings.TrimPrefix "@" }}
+{{ if and $u.Host $user (not (strings.Contains $user "/")) }}
+{{ $handles = $handles | append (printf "@%s@%s" $user $u.Host) }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+{{ end }}
+
+{{ range uniq $handles }}
+<meta name="fediverse:creator" content="{{ . }}" />
+{{ end }}

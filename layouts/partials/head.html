@@ -104,6 +104,8 @@
   {{ with .Site.Params.verification.fediverse }}
   <meta name="fediverse:creator" content="{{ . }}" />
   {{ end }}
+  {{/* Per-page fediverse creator attribution, from the page's authors */}}
+  {{ partial "fediverse-creator.html" . }}
   {{/* Social */}}
   {{ template "_internal/opengraph.html" . }}
   {{ template "_internal/twitter_cards.html" . }}
