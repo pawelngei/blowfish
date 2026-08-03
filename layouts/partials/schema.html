@@ -9,41 +9,74 @@
     {{ with .Site.LanguageCode }}"inLanguage": "{{ . }}",{{ end }}
     "url": "{{ (site.GetPage "/").Permalink | safeURL }}",
     {{ with .Site.Params.keywords }}"keywords": {{ . }},{{ end }}
+    {{/* .Site.Params.Author.name is not set for this site; the library itself
+         is the publisher. */}}
     "publisher" : {
-      "@type": "Person",
-      "name": "{{ .Site.Params.Author.name | safeJS }}"
+      "@type": "Organization",
+      "name": "{{ .Site.Title | safeJS }}"
     }
   }
   </script>
 {{ else if .IsPage }}
   {{- $iso8601 := "2006-01-02T15:04:05-07:00" -}}
-  <script type="application/ld+json">
-  [{
-    "@context": "https://schema.org",
-    "@type": "Article",
-    "articleSection": "{{ (site.GetPage .Section).Title | safeJS }}",
-    "name": "{{ .Title | safeJS }}",
-    "headline": "{{ .Title | safeJS }}",
-    {{ with .Description }}"description": "{{ . | safeJS }}",{{ end }}
-    {{ with .Summary }}"abstract": "{{ . | safeJS }}",{{ end }}
-    {{ with .Site.LanguageCode }}"inLanguage": "{{ . }}",{{ end }}
-    "url" : "{{ .Permalink }}",
-    "author" : {
-      "@type": "Person",
-      "name": "{{ .Site.Params.Author.name | safeJS }}"
-    },
-    {{ with .PublishDate }}"copyrightYear": "{{ .Format "2006" }}",{{ end }}
-    {{ with .Date }}"dateCreated": "{{ .Format $iso8601 }}",{{ end }}
-    {{ with .PublishDate }}"datePublished": "{{ .Format $iso8601 }}",{{ end }}
-    {{ with .ExpiryDate }}"expires": "{{ .Format $iso8601 }}",{{ end }}
-    {{ with .Lastmod }}"dateModified": "{{ .Format $iso8601 }}",{{ end }}
-    {{ if .Keywords }}
-    {{ with .Keywords }}"keywords": {{ . }},{{ end }}
-    {{ else }}
-    {{ with .Params.tags }}"keywords": {{ . }},{{ end }}
+
+  {{/* Built as maps and marshalled with jsonify rather than interpolated as
+       text: a title or description containing a double quote would otherwise
+       produce invalid JSON-LD. */}}
+  {{ $article := dict
+      "@context" "https://schema.org"
+      "@type" "Article"
+      "articleSection" (site.GetPage .Section).Title
+      "name" .Title
+      "headline" .Title
+      "url" .Permalink
+      "mainEntityOfPage" "true"
+      "wordCount" (string .WordCount)
+  }}
+
+  {{/* Real authors from `authors` front matter. The site-wide
+       .Site.Params.Author.name this used to read is never set, so every page
+       was emitting an empty name. */}}
+  {{ $authors := partial "schema-authors.html" . }}
+  {{ if $authors }}
+    {{ $article = merge $article (dict "author" $authors) }}
+  {{ else }}
+    {{ $article = merge $article (dict "author" (dict "@type" "Organization" "name" site.Title)) }}
+  {{ end }}
+
+  {{ with .Description }}{{ $article = merge $article (dict "description" .) }}{{ end }}
+  {{ with .Summary }}{{ $article = merge $article (dict "abstract" (. | plainify | strings.TrimSpace)) }}{{ end }}
+  {{ with .Site.LanguageCode }}{{ $article = merge $article (dict "inLanguage" .) }}{{ end }}
+  {{ with .PublishDate }}{{ $article = merge $article (dict "copyrightYear" (.Format "2006") "datePublished" (.Format $iso8601)) }}{{ end }}
+  {{ with .Date }}{{ $article = merge $article (dict "dateCreated" (.Format $iso8601)) }}{{ end }}
+  {{ with .ExpiryDate }}{{ $article = merge $article (dict "expires" (.Format $iso8601)) }}{{ end }}
+  {{ with .Lastmod }}{{ $article = merge $article (dict "dateModified" (.Format $iso8601)) }}{{ end }}
+  {{ with (.Keywords | default .Params.tags) }}{{ $article = merge $article (dict "keywords" .) }}{{ end }}
+
+  {{ $nodes := slice }}
+
+  {{/* Art pages additionally describe the artwork itself as ImageObject
+       nodes carrying license + acquireLicensePage, which is what makes the
+       images eligible for Google's "Licensable" badge. */}}
+  {{ if eq .Type "art" }}
+    {{ $images := partial "art-image-schema.html" . }}
+    {{ with $images }}
+      {{ $first := index . 0 }}
+      {{ $refs := slice }}
+      {{ range . }}
+        {{ $refs = $refs | append (dict "@id" (index . "@id")) }}
+      {{ end }}
+      {{ $article = merge $article (dict
+          "license" $first.license
+          "copyrightNotice" $first.copyrightNotice
+          "image" $refs
+      ) }}
+      {{ $nodes = $nodes | append . }}
     {{ end }}
-    "mainEntityOfPage": "true",
-    "wordCount": "{{ .WordCount }}"
-  }]
+  {{ end }}
+
+  {{ $nodes = $nodes | append $article }}
+  <script type="application/ld+json">
+  {{ $nodes | jsonify (dict "indent" "  ") | safeJS }}
   </script>
 {{ end }}

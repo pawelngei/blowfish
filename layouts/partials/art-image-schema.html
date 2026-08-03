@@ -1,0 +1,76 @@
+{{/* Builds schema.org ImageObject nodes for an art page's featured image,
+     carrying the license metadata Google requires for the Images
+     "Licensable" badge (license + acquireLicensePage).
+
+     Two nodes are emitted for the same artwork:
+       #image-display - the 660w derivative actually shown on the page, which
+                        is what a crawler indexes from here;
+       #image-full    - the untouched original behind "Get Full Resolution",
+                        the copy that gets downloaded and re-hosted elsewhere.
+     Both carry identical rights metadata.
+
+     Input: the page
+     Returns: a slice of ImageObject dicts, empty if there is no featured
+     image or the license could not be resolved. */}}
+{{ $page := . }}
+{{ $nodes := slice }}
+
+{{/* Same lookup as _default/single.html, so the schema cannot describe an
+     image the page does not render. */}}
+{{ $featured := ($page.Resources.ByType "image").GetMatch "*feature*" }}
+{{ $license := partial "license-resolve.html" $page }}
+
+{{ if and $featured $license }}
+  {{ $iso8601 := "2006-01-02T15:04:05-07:00" }}
+  {{ $creators := partial "schema-authors.html" $page }}
+  {{ $names := delimit (apply $creators "index" "." "name") ", " " and " }}
+
+  {{/* Per-language "Which art can I use?" guide. */}}
+  {{ $acquire := absLangURL "pages/which-art-can-i-use/" }}
+  {{ with site.GetPage "/pages/which-art-can-I-use" }}
+    {{ $acquire = .Permalink }}
+  {{ else }}
+    {{ warnf "[SSL] could not resolve /pages/which-art-can-I-use for lang %q; falling back to %s" site.Language.Lang $acquire }}
+  {{ end }}
+
+  {{/* Rights metadata shared by both nodes. TASL order (Title, Author,
+       Source, License) is the attribution standard the site itself teaches
+       on the "Which art can I use?" page. */}}
+  {{ $rights := dict
+      "@context" "https://schema.org"
+      "@type" "ImageObject"
+      "url" $page.Permalink
+      "name" $page.Title
+      "license" $license.url
+      "acquireLicensePage" $acquire
+      "creditText" (printf "%s by %s (%s)" $page.Title $names $license.name)
+      "copyrightNotice" (printf "%s %s" $license.name $names)
+  }}
+  {{ with $creators }}
+    {{ $rights = merge $rights (dict "creator" .) }}
+  {{ end }}
+  {{ with $page.Description }}
+    {{ $rights = merge $rights (dict "description" .) }}
+  {{ end }}
+  {{ with $page.PublishDate }}
+    {{ $rights = merge $rights (dict "datePublished" (.Format $iso8601)) }}
+  {{ end }}
+
+  {{ $display := $featured.Resize "660x" }}
+  {{ $nodes = $nodes | append (merge $rights (dict
+      "@id" (printf "%s#image-display" $page.Permalink)
+      "contentUrl" $display.Permalink
+      "thumbnailUrl" ($featured.Resize "330x").Permalink
+      "width" $display.Width
+      "height" $display.Height
+  )) }}
+
+  {{ $nodes = $nodes | append (merge $rights (dict
+      "@id" (printf "%s#image-full" $page.Permalink)
+      "contentUrl" $featured.Permalink
+      "width" $featured.Width
+      "height" $featured.Height
+  )) }}
+{{ end }}
+
+{{ return $nodes }}

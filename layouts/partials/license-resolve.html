@@ -1,0 +1,23 @@
+{{/* Resolves a page's Creative Commons license from its tags.
+     On this site the license is a tag: every art page carries exactly one
+     key from data/licenses.yaml among its tags.
+     Input: the page
+     Returns: dict "name" "url", or an empty dict (falsy) if unresolvable.
+     Warns at build time when a page matches no license or more than one,
+     so a missing or misspelled license tag fails loudly instead of
+     silently dropping the license out of the structured data. */}}
+{{ $licenses := site.Data.licenses }}
+{{ $matches := slice }}
+{{ range $tag := .Params.tags }}
+  {{ with index $licenses $tag }}
+    {{ $matches = $matches | append (dict "name" $tag "url" .url) }}
+  {{ end }}
+{{ end }}
+
+{{ $result := dict }}
+{{ if eq (len $matches) 1 }}
+  {{ $result = index $matches 0 }}
+{{ else if .File }}
+  {{ warnf "[SSL] %s: expected exactly 1 license tag, found %d %v" .File.Path (len $matches) (apply $matches "index" "." "name") }}
+{{ end }}
+{{ return $result }}

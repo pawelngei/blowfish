@@ -1,0 +1,35 @@
+{{/* Builds schema.org Person nodes from a page's `authors` front matter.
+     Resolves each slug through author-resolve.html, so the name, link and
+     social links come from content/authors/{slug}/ in the current language
+     with default-language fallback - the same data the bio box renders.
+     Input: the page
+     Returns: a slice of Person dicts (empty when the page has no authors). */}}
+{{ $page := . }}
+{{ $people := slice }}
+
+{{ range $slug := $page.Params.authors }}
+  {{ $resolved := partial "author-resolve.html" (dict "page" $page "slug" $slug) }}
+  {{ with $resolved }}
+    {{ $person := dict "@type" "Person" "name" .authorPage.Title }}
+    {{ with .link }}
+      {{ $person = merge $person (dict "url" (. | absURL)) }}
+    {{ end }}
+    {{/* social is a list of single-key maps ({icon: url}), as author-extra.html
+         iterates it. Only external profile URLs belong in sameAs - mailto and
+         other non-http entries would publish an address in the structured data. */}}
+    {{ $sameAs := slice }}
+    {{ range .social }}
+      {{ range $name, $link := . }}
+        {{ if hasPrefix ($link | string) "http" }}
+          {{ $sameAs = $sameAs | append ($link | string) }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    {{ with $sameAs }}
+      {{ $person = merge $person (dict "sameAs" .) }}
+    {{ end }}
+    {{ $people = $people | append $person }}
+  {{ end }}
+{{ end }}
+
+{{ return $people }}
