@@ -107,8 +107,23 @@
   {{/* Per-page fediverse creator attribution, from the page's authors */}}
   {{ partial "fediverse-creator.html" . }}
   {{/* Social */}}
+  {{/* Hugo's internal opengraph/twitter_cards templates are compiled into the
+       binary and emit no alt property, so the alt tags are appended here.
+       og:image is the last property the opengraph template writes, which puts
+       og:image:alt directly beneath the og:image it describes, as Open Graph
+       structured properties require. Both are emitted only when the page has a
+       featured image AND real alt text: the title fallback is deliberately off,
+       since og:title already carries it. */}}
+  {{ $hasImage := or (($.Resources.ByType "image").GetMatch "*feature*") $.Params.images }}
+  {{ $imageAlt := "" }}
+  {{ if $hasImage }}{{ $imageAlt = partial "utils/image-alt.html" (dict "page" . "fallbackTitle" false) }}{{ end }}
   {{ template "_internal/opengraph.html" . }}
+  {{ with $imageAlt }}
+  <meta property="og:image:alt" content="{{ . }}" />{{ end }}
   {{ template "_internal/twitter_cards.html" . }}
+  {{/* X truncates twitter:image:alt at 420 characters. */}}
+  {{ with $imageAlt }}
+  <meta name="twitter:image:alt" content="{{ . | truncate 420 "" }}" />{{ end }}
   {{/* Schema */}}
   {{ partial "schema.html" . }}
   {{/* Me */}}

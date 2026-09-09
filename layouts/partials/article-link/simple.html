@@ -1,4 +1,5 @@
 {{ $constrainItemsWidth := .Page.Site.Params.list.constrainItemsWidth | default false }}
+{{ $alt := partial "utils/image-alt.html" (dict "page" .) }}
 
 {{ $articleClasses := "flex flex-wrap article" }}
 {{ if .Site.Params.list.showCards }}
@@ -58,16 +59,16 @@
     {{ with $featured }}
     {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
-        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="180">
+        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="180">
         {{ end }}
       {{ else }}
         {{ with .Resize "600x"  }}
-        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="180">
+        <img src="{{ .RelPermalink }}" class="{{ $articleImageClasses }}" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="180">
         {{ end }}
       {{ end }}
     {{ end }}
     {{- else if $featuredParamURL -}}
-    <img src="{{ $featuredParamURL }}" class="{{ $articleImageClasses }}" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="180">
+    <img src="{{ $featuredParamURL }}" class="{{ $articleImageClasses }}" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="180">
     {{- else -}}
     {{- with $.Site.Params.images }}
     <meta property="og:image" content="{{ index . 0 | absURL }}" />{{ end -}}

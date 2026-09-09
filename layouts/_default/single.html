@@ -29,7 +29,7 @@
     {{ if eq .Type "art" }}
       {{- $images := .Resources.ByType "image" -}}
       {{- $featured := $images.GetMatch "*feature*" -}}
-      {{- $title := .Title -}}
+      {{- $alt := partial "utils/image-alt.html" (dict "page" .) -}}
       {{- with $featured -}}
         <section class="flex flex-col max-w-full mb-5">
           <figure>
@@ -43,7 +43,7 @@
               {{ ($featured.Resize "1024x").RelPermalink }} 1024w,
               {{ ($featured.Resize "1320x").RelPermalink }} 2x"
               src="{{ ($featured.Resize "660x").RelPermalink }}"
-              alt="{{ $title }}"
+              alt="{{ $alt }}"
             />
             <figcaption class="flex flex-row justify-between max-w-full gap-5 mb-5">
               <a

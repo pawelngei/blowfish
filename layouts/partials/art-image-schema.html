@@ -49,8 +49,11 @@
   {{ with $creators }}
     {{ $rights = merge $rights (dict "creator" .) }}
   {{ end }}
-  {{ with $page.Description }}
-    {{ $rights = merge $rights (dict "description" .) }}
+  {{/* What the picture shows, from the `alt` front matter (falling back to
+       `description`). No title fallback: `name` above already carries the
+       title, and repeating it here would describe nothing. */}}
+  {{ with partial "utils/image-alt.html" (dict "page" $page "fallbackTitle" false) }}
+    {{ $rights = merge $rights (dict "description" . "caption" .) }}
   {{ end }}
   {{ with $page.PublishDate }}
     {{ $rights = merge $rights (dict "datePublished" (.Format $iso8601)) }}

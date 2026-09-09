@@ -1,4 +1,5 @@
 {{ $disableImageOptimization := .Page.Site.Params.disableImageOptimization | default false }}
+{{ $alt := partial "utils/image-alt.html" (dict "page" .) }}
 {{ with .Params.externalUrl }}
 <a href="{{ . }}" target="_blank" rel="external" class="min-w-full">
   {{ else }}
@@ -34,16 +35,16 @@
       {{ with $featured }}
       {{ if or $disableImageOptimization (strings.HasSuffix $featured ".svg")}}
         {{ with . }}
-        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Title }}" loading="lazy" decoding="async" width="600" height="150">
+        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="150">
         {{ end }}
       {{ else }}
         {{ with .Resize "600x" }}
-        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="150">
+        <img src="{{ .RelPermalink }}" class="w-full thumbnail_card_related nozoom" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="150">
         {{ end }}
       {{ end }}
       {{ end }}
       {{- else if $featuredParamURL -}}
-      <img src="{{ $featuredParamURL }}" class="w-full thumbnail_card_related nozoom" alt="{{ $.Page.Title }}" loading="lazy" decoding="async" width="600" height="150">
+      <img src="{{ $featuredParamURL }}" class="w-full thumbnail_card_related nozoom" alt="{{ $alt }}" loading="lazy" decoding="async" width="600" height="150">
       {{- else -}}
       {{- with $.Site.Params.images }}
       <meta property="og:image" content="{{ index . 0 | absURL }}" />{{ end -}}

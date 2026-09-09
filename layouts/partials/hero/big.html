@@ -25,8 +25,7 @@
 {{- $caption = .Params.featureimagecaption -}}
 {{ end }}
 
-{{- $alt := .Page.Title -}}
-{{- with .Page.Params.alt }}{{ $alt = . }}{{ end -}}
+{{- $alt := partial "utils/image-alt.html" (dict "page" .Page) -}}
 
 {{- with $featured -}}
     {{ if strings.HasSuffix $featured ".svg" }}
